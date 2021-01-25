@@ -9,7 +9,7 @@ namespace CreateDb.Storage.Models
         public string ProductName { get; set; }
         public int Price { get; set; }
 
-        public List<BascetEntity> Orders { get; set; }
+        public List<OrderMenuEntity> Orders { get; set; }
 
     }
 }

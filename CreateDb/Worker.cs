@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CreateDb.Services;
 using CreateDb.Storage;
 using CreateDb.Storage.Models;
 using CreateDb.TestDB;
@@ -24,8 +25,13 @@ namespace CreateDb
             _scopeFactory = scopeFactory;
             ApplyMigrations();
             AddDataToTable testDB = new AddDataToTable();
-            testDB.AddToBascet(_scopeFactory);
-            
+            //testDB.CreateMenu(_scopeFactory);
+            //testDB.AddData(_scopeFactory);
+            //testDB.AddToBascet(_scopeFactory);
+            //testDB.AddAddress(_scopeFactory);
+            MenuService fullMenu = new MenuService(scopeFactory);
+            fullMenu.GetMenu();
+
         }
         private void ApplyMigrations()
         {
@@ -33,28 +39,6 @@ namespace CreateDb
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
             _context.Database.Migrate();
         }
-
-        
-        //private void AllDelete()
-        //{
-        //    using var scope = _scopeFactory.CreateScope();
-        //    var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
-
-        //var user = _context.Users.FirstOrDefault();
-        //var menu = _context.Menu
-        //    .Where(m => m.Id > 0)
-        //    .Select(m => m);
-        //foreach (var m in menu)
-        //{
-        //    _context.Menu.Remove(m);
-        //}
-
-
-        //    _context.Users.Remove(user);
-
-        //    _context.SaveChanges();
-        //}
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)

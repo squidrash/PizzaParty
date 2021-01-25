@@ -19,5 +19,7 @@
     <Folder Include="Storage\" />
     <Folder Include="Storage\Models\" />
     <Folder Include="TestDB\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 </Project>

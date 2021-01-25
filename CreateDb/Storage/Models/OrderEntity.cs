@@ -10,7 +10,7 @@ namespace CreateDb.Storage.Models
         public int UserEntityId { get; set; }
         public UserEntity UserOrder { get; set; }
 
-        public List<BascetEntity> Products { get; set; }
+        public List<OrderMenuEntity> Products { get; set; }
 
         public DateTime CreatTime { get; set; } 
         public string Status { get; set; }

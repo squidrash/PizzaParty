@@ -10,9 +10,8 @@ namespace CreateDb.Storage.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public string LastName { get; set; }
-        [Required]
-        public string Address { get; set; }
+        public string LastName { get; set; }        
+        public List<AddressEntity> Address { get; set; }
         [Required]
         public string Phone { get; set; }
         public int Discount { get; set; }

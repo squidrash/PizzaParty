@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace CreateDb.Storage.Models
 {
-    public class BascetEntity
+    public class OrderMenuEntity
     {
         public int Id { get; set; }
 
@@ -10,5 +12,7 @@ namespace CreateDb.Storage.Models
 
         public int MenuEntityId { get; set; }
         public MenuEntity Dish { get; set; }
+
+        public int CountDish { get; set; }
     }
 }

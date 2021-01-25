@@ -19,26 +19,39 @@ namespace CreateDb.Migrations
                 .HasAnnotation("ProductVersion", "3.1.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("CreateDb.Storage.Models.BascetEntity", b =>
+            modelBuilder.Entity("CreateDb.Storage.Models.AddressEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("MenuEntityId")
+                    b.Property<int>("Apartment")
                         .HasColumnType("integer");
 
-                    b.Property<int>("OrderEntityId")
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NumberOfBuild")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("NumberOfEntrance")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserEntityId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MenuEntityId");
+                    b.HasIndex("UserEntityId");
 
-                    b.HasIndex("OrderEntityId");
-
-                    b.ToTable("BascetEntity");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("CreateDb.Storage.Models.MenuEntity", b =>
@@ -56,7 +69,7 @@ namespace CreateDb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Menu");
+                    b.ToTable("Menus");
                 });
 
             modelBuilder.Entity("CreateDb.Storage.Models.OrderEntity", b =>
@@ -82,16 +95,37 @@ namespace CreateDb.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("CreateDb.Storage.Models.UserEntity", b =>
+            modelBuilder.Entity("CreateDb.Storage.Models.OrderMenuEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("CountDish")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MenuEntityId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrderEntityId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuEntityId");
+
+                    b.HasIndex("OrderEntityId");
+
+                    b.ToTable("Bascets");
+                });
+
+            modelBuilder.Entity("CreateDb.Storage.Models.UserEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("Discount")
                         .HasColumnType("integer");
@@ -113,7 +147,25 @@ namespace CreateDb.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CreateDb.Storage.Models.BascetEntity", b =>
+            modelBuilder.Entity("CreateDb.Storage.Models.AddressEntity", b =>
+                {
+                    b.HasOne("CreateDb.Storage.Models.UserEntity", "UserAddress")
+                        .WithMany("Address")
+                        .HasForeignKey("UserEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CreateDb.Storage.Models.OrderEntity", b =>
+                {
+                    b.HasOne("CreateDb.Storage.Models.UserEntity", "UserOrder")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CreateDb.Storage.Models.OrderMenuEntity", b =>
                 {
                     b.HasOne("CreateDb.Storage.Models.MenuEntity", "Dish")
                         .WithMany("Orders")
@@ -124,15 +176,6 @@ namespace CreateDb.Migrations
                     b.HasOne("CreateDb.Storage.Models.OrderEntity", "Order")
                         .WithMany("Products")
                         .HasForeignKey("OrderEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CreateDb.Storage.Models.OrderEntity", b =>
-                {
-                    b.HasOne("CreateDb.Storage.Models.UserEntity", "UserOrder")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
