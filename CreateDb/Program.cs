@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CreateDb.Services;
 using CreateDb.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,8 @@ namespace CreateDb
 
                     services.AddDbContext<PizzaDbContext>(options => options.UseNpgsql(pgConnection));
                     services.AddHostedService<Worker>();
+                    services.AddSingleton<IMenuForStaffService, MenuService>();
+                    services.AddSingleton<IMenuForClientsService, MenuService>();
                 });
     }
 }

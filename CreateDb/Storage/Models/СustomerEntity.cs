@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CreateDb.Storage.Models
 {
-    public class UserEntity
+    public class CustomerEntity
     {
         public int Id { get; set; }
         [Required]

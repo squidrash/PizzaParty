@@ -33,6 +33,9 @@ namespace CreateDb.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("CustomerEntityId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("NumberOfBuild")
                         .IsRequired()
                         .HasColumnType("text");
@@ -44,14 +47,38 @@ namespace CreateDb.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("UserEntityId")
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerEntityId");
+
+                    b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("CreateDb.Storage.Models.CustomerEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("Discount")
                         .HasColumnType("integer");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserEntityId");
-
-                    b.ToTable("Addresses");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("CreateDb.Storage.Models.MenuEntity", b =>
@@ -82,15 +109,15 @@ namespace CreateDb.Migrations
                     b.Property<DateTime>("CreatTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<int>("CustomerEntityId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Status")
                         .HasColumnType("text");
 
-                    b.Property<int>("UserEntityId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserEntityId");
+                    b.HasIndex("CustomerEntityId");
 
                     b.ToTable("Orders");
                 });
@@ -120,47 +147,20 @@ namespace CreateDb.Migrations
                     b.ToTable("Bascets");
                 });
 
-            modelBuilder.Entity("CreateDb.Storage.Models.UserEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("Discount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("CreateDb.Storage.Models.AddressEntity", b =>
                 {
-                    b.HasOne("CreateDb.Storage.Models.UserEntity", "UserAddress")
+                    b.HasOne("CreateDb.Storage.Models.CustomerEntity", "CustomerAddress")
                         .WithMany("Address")
-                        .HasForeignKey("UserEntityId")
+                        .HasForeignKey("CustomerEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("CreateDb.Storage.Models.OrderEntity", b =>
                 {
-                    b.HasOne("CreateDb.Storage.Models.UserEntity", "UserOrder")
+                    b.HasOne("CreateDb.Storage.Models.CustomerEntity", "CustomerOrder")
                         .WithMany("Orders")
-                        .HasForeignKey("UserEntityId")
+                        .HasForeignKey("CustomerEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

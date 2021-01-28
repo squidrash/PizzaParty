@@ -7,8 +7,8 @@ namespace CreateDb.Storage.Models
     {
         public int Id { get; set; }
 
-        public int UserEntityId { get; set; }
-        public UserEntity UserOrder { get; set; }
+        public int CustomerEntityId { get; set; }
+        public CustomerEntity CustomerOrder { get; set; }
 
         public List<OrderMenuEntity> Products { get; set; }
 

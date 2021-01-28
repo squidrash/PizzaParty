@@ -6,7 +6,7 @@ namespace CreateDb.Storage
 {
     public class PizzaDbContext : DbContext
     {
-        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<CustomerEntity> Customers { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
         public DbSet<MenuEntity> Menus { get; set; }
         public DbSet<OrderMenuEntity> Bascets { get; set; }
