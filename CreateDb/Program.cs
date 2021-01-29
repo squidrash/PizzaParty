@@ -26,8 +26,15 @@ namespace CreateDb
 
                     services.AddDbContext<PizzaDbContext>(options => options.UseNpgsql(pgConnection));
                     services.AddHostedService<Worker>();
+
                     services.AddSingleton<IMenuForStaffService, MenuService>();
                     services.AddSingleton<IMenuForClientsService, MenuService>();
+
+                    services.AddSingleton<IUserForCustomerService, UserService>();
+                    services.AddSingleton<IUserForStaffService, UserService>();
+
+                    services.AddSingleton<IOrdersForCustomerService, OrdersService>();
+                    services.AddSingleton<IOrdersForStaffService, OrdersService>();
                 });
     }
 }

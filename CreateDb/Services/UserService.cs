@@ -10,17 +10,17 @@ namespace CreateDb.Services
 {
     public interface IUserForStaffService
     {
-        //public void AllUsers();
-        //public void SelectUser();
-        //public void RegistrationUser();
-        //public void DeleteUser();
-        //public void EditUser();
+        public List<CustomerEntity> AllUsers();
+        public CustomerEntity SelectUser(string Name, string LastName);
+        public void RegistrationUser(List<CustomerEntity> customers);
+        public void DeleteUser(List<CustomerEntity> customers);
+        public void EditUser(CustomerEntity customer);
     }
 
     public interface IUserForCustomerService
     {
-        //public void SelectUser();
-        //public void EditUser();
+        public CustomerEntity SelectUser(string Name, string LastName);
+        public void EditUser(CustomerEntity customer);
     }
 
     public class UserService : IUserForStaffService, IUserForCustomerService
@@ -47,7 +47,11 @@ namespace CreateDb.Services
             using var scope = _scopeFactory.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
 
-            var selectedUser = _context.Customers.FirstOrDefault(u => u.Name == Name && u.LastName == LastName);
+            var selectedUser = _context.Customers
+                .Include(u => u.Orders)
+                .ThenInclude(o => o.Products)
+                .ThenInclude(p => p.Dish)
+                .FirstOrDefault(u => u.Name == Name && u.LastName == LastName);
             return selectedUser;
         }
 

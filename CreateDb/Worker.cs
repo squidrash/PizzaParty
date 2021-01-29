@@ -18,19 +18,36 @@ namespace CreateDb
     {
         private readonly ILogger<Worker> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
-        private readonly IMenuForStaffService _staffService;
-        private readonly IMenuForClientsService _clientsService;
 
-        public Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, IMenuForStaffService staffService, IMenuForClientsService clientsService)
+        private readonly IMenuForStaffService _menuStaffService;
+        private readonly IMenuForClientsService _menuClientsService;
+
+        private readonly IOrdersForCustomerService _ordersCustomerService;
+        private readonly IOrdersForStaffService _ordersStaffService;
+
+        private readonly IUserForCustomerService _userForCustomerService;
+        private readonly IUserForStaffService _userForStaffService;
+
+        public Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory,
+            IMenuForStaffService menuStaffService, IMenuForClientsService menuClientsService,
+            IOrdersForCustomerService ordersCustomerService, IOrdersForStaffService ordersStaffService,
+            IUserForCustomerService userForCustomerService, IUserForStaffService userForStaffService)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
-            _staffService = staffService;
-            _clientsService = clientsService;
-            ApplyMigrations();
-            UserService kek = new UserService(_scopeFactory);
-            kek.AllUsers();
 
+            _menuStaffService = menuStaffService;
+            _menuClientsService = menuClientsService;
+
+            _ordersCustomerService = ordersCustomerService;
+            _ordersStaffService = ordersStaffService;
+
+            _userForCustomerService = userForCustomerService;
+            _userForStaffService = userForStaffService;
+
+            ApplyMigrations();
+
+            TestChangeOrderStatus();
 
             //изменение
             //var fullMenu = _staffService.GetMenu();
@@ -66,6 +83,42 @@ namespace CreateDb
             testDB.AddToBascet(_scopeFactory);
             testDB.AddAddress(_scopeFactory);
         }
+        private void TestCreateOrder()// ошибка в SaveChanges
+        {
+            var user = _userForStaffService.SelectUser("Tom", "Smit");
+            Console.WriteLine($"{user.Name} {user.LastName}");
+            Console.WriteLine($"{user.Phone} {user.Discount}");
+
+            var order = _ordersCustomerService.CreateOrder(user);
+            Console.WriteLine("метод с передачей клиента");
+            Console.WriteLine($"{order.CreatTime} - {order.CustomerEntityId} - status {order.Status}");
+            var order1 = _ordersCustomerService.CreateOrder();
+            Console.WriteLine("метод без передачи клиента");
+            Console.WriteLine($"{order1.CreatTime} - {order1.CustomerEntityId} - status {order1.Status}");
+        }
+        private void TestChangeOrderStatus()
+        {
+            var user = _userForStaffService.SelectUser("Tom", "Smit");
+            Console.WriteLine($"{user.Name} {user.LastName}");
+            Console.WriteLine($"Номер: {user.Phone} скидка: {user.Discount}");
+            var orders = user.Orders;
+            foreach(var o in orders)
+            {
+                Console.WriteLine($"Время создания заказа: {o.CreatTime.TimeOfDay}б  статус заказа: {o.Status}");
+                var products = o.Products;
+                foreach(var p in products)
+                {
+                    Console.WriteLine($"Наименование блюда: {p.Dish.ProductName}, количество - {p.CountDish}");
+                }
+            }
+
+            var order = _ordersStaffService.OrdersOfOneCustomer(user);// изменить принцип действия 
+            var orderStatus = "Готовится";
+            Console.WriteLine($"статус до изменения{order.Status}");
+            var result = _ordersStaffService.ChangeOrderStatus(order,orderStatus);
+            Console.WriteLine($"статус после изменения {result.Status}");
+        }
+
         private void ApplyMigrations()
         {
             using var scope = _scopeFactory.CreateScope();

@@ -13,7 +13,14 @@ namespace CreateDb.Storage.Models
         public List<OrderMenuEntity> Products { get; set; }
 
         public DateTime CreatTime { get; set; } 
-        public string Status { get; set; }
-
+        public Status Status { get; set; }
+    }
+    public enum Status
+    {
+        New = 1,
+        Preparing,
+        OnTheWay,
+        Delivered,
+        Cancelled
     }
 }

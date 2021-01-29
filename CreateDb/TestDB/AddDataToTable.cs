@@ -38,7 +38,7 @@ namespace CreateDb.TestDB
             {
                 CreatTime = DateTime.Now,
                 CustomerOrder = tom,
-                Status = "готовится"
+                Status = Status.New
             };
             _context.Orders.Add(firstOrder);
 
@@ -49,7 +49,7 @@ namespace CreateDb.TestDB
             {
                 CreatTime = DateTime.Now,
                 CustomerOrder = bob,
-                Status = "готовится"
+                Status = Status.New
             };
             _context.Orders.Add(secondOrder);
 
