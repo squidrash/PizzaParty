@@ -28,6 +28,8 @@ namespace CreateDb
             _staffService = staffService;
             _clientsService = clientsService;
             ApplyMigrations();
+            UserService kek = new UserService(_scopeFactory);
+            kek.AllUsers();
 
 
             //изменение
