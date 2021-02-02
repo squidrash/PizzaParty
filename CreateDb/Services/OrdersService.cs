@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CreateDb.Storage;
 using CreateDb.Storage.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CreateDb.Services
@@ -13,15 +14,16 @@ namespace CreateDb.Services
 
         public List<OrderEntity> AllOrders(CustomerEntity customer = null);
 
-        public OrderEntity OrdersOfOneCustomer(CustomerEntity customer = null, string orderStatus = null);
+        //public OrderEntity OneOrderOfOneCustomer(CustomerEntity customer, string orderStatus = null);
 
     }
 
     public interface IOrdersForCustomerService
     {
         public OrderEntity CreateOrder(CustomerEntity customer = null);
+        public List<OrderEntity> AllOrders(CustomerEntity customer);
 
-        public OrderEntity OrdersOfOneCustomer(CustomerEntity customer = null, string orderStatus = null);
+        //public OrderEntity OneOrderOfOneCustomer(CustomerEntity customer, string orderStatus = null);
     }
         
     public class OrdersService : IOrdersForCustomerService, IOrdersForStaffService
@@ -47,12 +49,19 @@ namespace CreateDb.Services
             using var scope = _scopeFactory.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
 
-            OrderEntity order = new OrderEntity
+            OrderEntity order = new OrderEntity();
+            if (customer != null)
             {
-                CreatTime = DateTime.Now,
-                CustomerOrder = customer,
-                Status = Status.New
-            };
+                order.CreatTime = DateTime.Now;
+                order.CustomerOrder = customer;
+                order.Status = Status.New;
+            }
+            else
+            {
+                order.CreatTime = DateTime.Now;
+                order.Status = Status.New;
+            }
+            Console.WriteLine($"{order.Products} {order.Status} {order.CreatTime} {order.CustomerOrder.Name}");
             _context.Orders.Add(order);
             _context.SaveChanges();
             return order;
@@ -71,6 +80,7 @@ namespace CreateDb.Services
             return changeStatus;
         }
 
+        //Работает
         public List<OrderEntity> AllOrders(CustomerEntity customer = null)
         {
             using var scope = _scopeFactory.CreateScope();
@@ -82,27 +92,31 @@ namespace CreateDb.Services
             }
             else
             {
-                orders = _context.Orders.ToList();
+                orders = _context.Orders
+                    .Include(o => o.CustomerOrder)
+                    .Include(o => o.Products)
+                    .ThenInclude(p => p.Dish)
+                    .ToList();
             }
             return orders;
         }
 
         //изменить принцип действия
         //и назнание
-        public OrderEntity OrdersOfOneCustomer(CustomerEntity customer = null, string orderStatus = null) 
-        {
-            using var scope = _scopeFactory.CreateScope();
-            var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
+        //public OrderEntity OneOrderOfOneCustomer(CustomerEntity customer, string orderStatus = null)
+        //{
+        //    using var scope = _scopeFactory.CreateScope();
+        //    var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
 
-            OrderEntity order = null;
-            if(customer != null)
-            {
-                 order = customer.Orders
-                .FirstOrDefault();
-            }
-            
-            return order;
-        }
+        //    OrderEntity order = null;
+        //    if (customer != null)
+        //    {
+        //        order = customer.Orders
+        //            .Where(o => o.Status == OrderStatuses[orderStatus])
+        //       .FirstOrDefault();
+        //    }
 
+        //    return order;
+        //}
     }
 }

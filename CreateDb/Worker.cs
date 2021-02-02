@@ -47,7 +47,11 @@ namespace CreateDb
 
             ApplyMigrations();
 
-            TestChangeOrderStatus();
+            //TestAllOrders();
+
+            //TestChangeOrderStatus();
+
+            TestCreateOrder();
 
             //изменение
             //var fullMenu = _staffService.GetMenu();
@@ -83,6 +87,28 @@ namespace CreateDb
             testDB.AddToBascet(_scopeFactory);
             testDB.AddAddress(_scopeFactory);
         }
+        private void TestAllOrders()// работает
+        {
+            Console.WriteLine("метод с передачей клиента");
+
+            var user = _userForStaffService.SelectUser("Tom", "Smit");
+            Console.WriteLine($"{user.Name} {user.LastName}");
+            Console.WriteLine($"Номер: {user.Phone} скидка: {user.Discount}");
+            var orders = _ordersStaffService.AllOrders(user);
+
+            foreach (var order in orders)
+            {
+                Console.WriteLine($"{order.CreatTime} - {order.CustomerEntityId} - status {order.Status} ");
+            }
+
+            Console.WriteLine("метод без клиента");
+
+            var ord = _ordersStaffService.AllOrders();
+            foreach(var o in ord)
+            {
+                Console.WriteLine($"{o.CreatTime} - {o.CustomerEntityId} - status {o.Status} - {o.CustomerOrder.Name} {o.CustomerOrder.LastName}");
+            }
+        }
         private void TestCreateOrder()// ошибка в SaveChanges
         {
             var user = _userForStaffService.SelectUser("Tom", "Smit");
@@ -96,26 +122,28 @@ namespace CreateDb
             Console.WriteLine("метод без передачи клиента");
             Console.WriteLine($"{order1.CreatTime} - {order1.CustomerEntityId} - status {order1.Status}");
         }
-        private void TestChangeOrderStatus()
+        private void TestChangeOrderStatus()// работает
         {
             var user = _userForStaffService.SelectUser("Tom", "Smit");
             Console.WriteLine($"{user.Name} {user.LastName}");
             Console.WriteLine($"Номер: {user.Phone} скидка: {user.Discount}");
             var orders = user.Orders;
-            foreach(var o in orders)
+            foreach (var o in orders)
             {
                 Console.WriteLine($"Время создания заказа: {o.CreatTime.TimeOfDay}б  статус заказа: {o.Status}");
                 var products = o.Products;
-                foreach(var p in products)
+                foreach (var p in products)
                 {
                     Console.WriteLine($"Наименование блюда: {p.Dish.ProductName}, количество - {p.CountDish}");
                 }
             }
 
-            var order = _ordersStaffService.OrdersOfOneCustomer(user);// изменить принцип действия 
-            var orderStatus = "Готовится";
-            Console.WriteLine($"статус до изменения{order.Status}");
-            var result = _ordersStaffService.ChangeOrderStatus(order,orderStatus);
+            var order = user.Orders
+                .Where(o => o.Status == Status.Preparing)
+                .FirstOrDefault();
+            var orderStatus = "Новый";
+            Console.WriteLine($"статус до изменения {order.Status}");
+            var result = _ordersStaffService.ChangeOrderStatus(order, orderStatus);
             Console.WriteLine($"статус после изменения {result.Status}");
         }
 

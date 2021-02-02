@@ -51,6 +51,7 @@ namespace CreateDb.Services
                 .Include(u => u.Orders)
                 .ThenInclude(o => o.Products)
                 .ThenInclude(p => p.Dish)
+                .Include(u => u.Address)
                 .FirstOrDefault(u => u.Name == Name && u.LastName == LastName);
             return selectedUser;
         }
