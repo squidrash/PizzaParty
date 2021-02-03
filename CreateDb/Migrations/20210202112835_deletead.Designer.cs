@@ -3,15 +3,17 @@ using System;
 using CreateDb.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CreateDb.Migrations
 {
     [DbContext(typeof(PizzaDbContext))]
-    partial class PizzaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210202112835_deletead")]
+    partial class deletead
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,30 +54,6 @@ namespace CreateDb.Migrations
                     b.HasIndex("CustomerEntityId");
 
                     b.ToTable("Addresses");
-                });
-
-            modelBuilder.Entity("CreateDb.Storage.Models.AddressOrderEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("AddressEntityId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("OrderEntityId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressEntityId")
-                        .IsUnique();
-
-                    b.HasIndex("OrderEntityId")
-                        .IsUnique();
-
-                    b.ToTable("AddressOrderEntities");
                 });
 
             modelBuilder.Entity("CreateDb.Storage.Models.CustomerEntity", b =>
@@ -168,7 +146,7 @@ namespace CreateDb.Migrations
 
                     b.HasIndex("OrderEntityId");
 
-                    b.ToTable("OrderMenuEntities");
+                    b.ToTable("Bascets");
                 });
 
             modelBuilder.Entity("CreateDb.Storage.Models.AddressEntity", b =>
@@ -176,21 +154,6 @@ namespace CreateDb.Migrations
                     b.HasOne("CreateDb.Storage.Models.CustomerEntity", "CustomerAddress")
                         .WithMany("Address")
                         .HasForeignKey("CustomerEntityId");
-                });
-
-            modelBuilder.Entity("CreateDb.Storage.Models.AddressOrderEntity", b =>
-                {
-                    b.HasOne("CreateDb.Storage.Models.AddressEntity", "Address")
-                        .WithOne("AddressOrder")
-                        .HasForeignKey("CreateDb.Storage.Models.AddressOrderEntity", "AddressEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CreateDb.Storage.Models.OrderEntity", "Order")
-                        .WithOne("AddressOrder")
-                        .HasForeignKey("CreateDb.Storage.Models.AddressOrderEntity", "OrderEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("CreateDb.Storage.Models.OrderEntity", b =>

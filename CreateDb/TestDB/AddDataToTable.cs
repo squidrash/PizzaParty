@@ -26,7 +26,7 @@ namespace CreateDb.TestDB
             _context.Menus.AddRange(sushi, sushi2);
             _context.SaveChanges();
         }
-        public void AddData(IServiceScopeFactory _scopeFactory)
+        public void AddCustomerAndOrders(IServiceScopeFactory _scopeFactory)
         {
             using var scope = _scopeFactory.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
@@ -69,7 +69,7 @@ namespace CreateDb.TestDB
             OrderMenuEntity firstDish = new OrderMenuEntity() { Dish = menu, Order = order, CountDish = 1 };
             OrderMenuEntity secondDish = new OrderMenuEntity() { Dish = menu2, Order = order, CountDish = 5 };
 
-            _context.Bascets.AddRange(firstDish, secondDish);
+            _context.OrderMenuEntities.AddRange(firstDish, secondDish);
 
             var user11 = _context.Customers.FirstOrDefault(u => u.Name == "Robert");
 
@@ -79,7 +79,7 @@ namespace CreateDb.TestDB
 
             OrderMenuEntity firstDish11 = new OrderMenuEntity() { Dish = menu11, Order = orders11, CountDish = 2 };
             OrderMenuEntity secondDish11 = new OrderMenuEntity() { Dish = menu211, Order = orders11, CountDish = 3 };
-            _context.Bascets.AddRange(firstDish11, secondDish11);
+            _context.OrderMenuEntities.AddRange(firstDish11, secondDish11);
 
 
             //Console.WriteLine($"{firstDish.MenuEntityId} { firstDish.OrderEntityId}");

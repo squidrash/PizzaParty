@@ -7,13 +7,15 @@ namespace CreateDb.Storage.Models
     {
         public int Id { get; set; }
 
-        public int CustomerEntityId { get; set; }
+        public int? CustomerEntityId { get; set; }
         public CustomerEntity CustomerOrder { get; set; }
 
         public List<OrderMenuEntity> Products { get; set; }
 
         public DateTime CreatTime { get; set; } 
         public Status Status { get; set; }
+
+        public AddressOrderEntity AddressOrder { get; set; }
     }
     public enum Status
     {

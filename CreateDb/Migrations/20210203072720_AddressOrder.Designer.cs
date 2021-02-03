@@ -3,15 +3,17 @@ using System;
 using CreateDb.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CreateDb.Migrations
 {
     [DbContext(typeof(PizzaDbContext))]
-    partial class PizzaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210203072720_AddressOrder")]
+    partial class AddressOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,7 +77,7 @@ namespace CreateDb.Migrations
                     b.HasIndex("OrderEntityId")
                         .IsUnique();
 
-                    b.ToTable("AddressOrderEntities");
+                    b.ToTable("AddressOrderEntity");
                 });
 
             modelBuilder.Entity("CreateDb.Storage.Models.CustomerEntity", b =>
@@ -168,7 +170,7 @@ namespace CreateDb.Migrations
 
                     b.HasIndex("OrderEntityId");
 
-                    b.ToTable("OrderMenuEntities");
+                    b.ToTable("Bascets");
                 });
 
             modelBuilder.Entity("CreateDb.Storage.Models.AddressEntity", b =>

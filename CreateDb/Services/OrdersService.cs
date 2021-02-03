@@ -20,7 +20,7 @@ namespace CreateDb.Services
 
     public interface IOrdersForCustomerService
     {
-        public OrderEntity CreateOrder(CustomerEntity customer = null);
+        public void CreateOrder(CustomerEntity customer = null);
         public List<OrderEntity> AllOrders(CustomerEntity customer);
 
         //public OrderEntity OneOrderOfOneCustomer(CustomerEntity customer, string orderStatus = null);
@@ -43,8 +43,8 @@ namespace CreateDb.Services
             {"Отменен", Status.Cancelled}
         };
 
-        //ошибка в SaveChanges
-        public OrderEntity CreateOrder(CustomerEntity customer = null) 
+        //работает
+        public void CreateOrder(CustomerEntity customer = null) 
         {
             using var scope = _scopeFactory.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
@@ -53,18 +53,16 @@ namespace CreateDb.Services
             if (customer != null)
             {
                 order.CreatTime = DateTime.Now;
-                order.CustomerOrder = customer;
                 order.Status = Status.New;
+                order.CustomerEntityId = customer.Id;
             }
             else
             {
                 order.CreatTime = DateTime.Now;
                 order.Status = Status.New;
             }
-            Console.WriteLine($"{order.Products} {order.Status} {order.CreatTime} {order.CustomerOrder.Name}");
             _context.Orders.Add(order);
             _context.SaveChanges();
-            return order;
         }
 
         //работает

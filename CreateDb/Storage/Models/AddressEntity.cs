@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CreateDb.Storage.Models
 {
+    // нужно ли добавить ссылку на заказ без пользователя?
     public class AddressEntity
     {
         public int Id { get; set; }
@@ -15,9 +16,9 @@ namespace CreateDb.Storage.Models
         public int NumberOfEntrance { get; set; }
         public int Apartment { get; set; }
 
-        public int CustomerEntityId { get; set; }
+        public int? CustomerEntityId { get; set; }
         public CustomerEntity CustomerAddress { get; set; }
 
-
+        public AddressOrderEntity AddressOrder { get; set; }
     }
 }

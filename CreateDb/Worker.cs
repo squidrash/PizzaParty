@@ -51,7 +51,7 @@ namespace CreateDb
 
             //TestChangeOrderStatus();
 
-            TestCreateOrder();
+            //TestCreateOrder();
 
             //изменение
             //var fullMenu = _staffService.GetMenu();
@@ -83,7 +83,7 @@ namespace CreateDb
         {
             AddDataToTable testDB = new AddDataToTable();
             testDB.CreateMenu(_scopeFactory);
-            testDB.AddData(_scopeFactory);
+            testDB.AddCustomerAndOrders(_scopeFactory);
             testDB.AddToBascet(_scopeFactory);
             testDB.AddAddress(_scopeFactory);
         }
@@ -115,12 +115,16 @@ namespace CreateDb
             Console.WriteLine($"{user.Name} {user.LastName}");
             Console.WriteLine($"{user.Phone} {user.Discount}");
 
-            var order = _ordersCustomerService.CreateOrder(user);
-            Console.WriteLine("метод с передачей клиента");
-            Console.WriteLine($"{order.CreatTime} - {order.CustomerEntityId} - status {order.Status}");
-            var order1 = _ordersCustomerService.CreateOrder();
-            Console.WriteLine("метод без передачи клиента");
-            Console.WriteLine($"{order1.CreatTime} - {order1.CustomerEntityId} - status {order1.Status}");
+            //var order = _ordersCustomerService.CreateOrder(user);
+            //Console.WriteLine("метод с передачей клиента");
+            //Console.WriteLine($"{order.CreatTime} - {order.CustomerEntityId} - status {order.Status}");
+            //var order1 = _ordersCustomerService.CreateOrder();
+            //Console.WriteLine("метод без передачи клиента");
+            //Console.WriteLine($"{order1.CreatTime} - {order1.CustomerEntityId} - status {order1.Status}");
+            _ordersCustomerService.CreateOrder(user);
+            
+             _ordersCustomerService.CreateOrder();
+            
         }
         private void TestChangeOrderStatus()// работает
         {
