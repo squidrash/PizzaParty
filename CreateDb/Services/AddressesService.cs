@@ -87,6 +87,10 @@ namespace CreateDb.Services
                 && a.NumberOfEntrance == numberOfEntrance
                 && a.Apartment == apartment)
                 .Include(a => a.Customer)
+                //нужно ли это все загружать?
+                //и если нужно то что??
+                .Include(a => a.AddressOrder.Order)
+                .ThenInclude(o => o.Products)
                 .FirstOrDefault();
 
             //var address = _context.Addresses

@@ -19,10 +19,14 @@ namespace CreateDb.Services
 
         public void RemoveFromMenu(MenuEntity menuEntity);
     }
+
     public interface IMenuForClientsService
     {
         public List<MenuEntity> GetMenu();
+
+        public MenuEntity OneDish(string dishName);
     }
+
     public class MenuService : IMenuForStaffService, IMenuForClientsService
     {
         private readonly IServiceScopeFactory _scopeFactory;

@@ -43,17 +43,18 @@ namespace CreateDb.Services
             return users;
         }
 
-        public CustomerEntity SelectUser(string Name, string LastName)
+        public CustomerEntity SelectUser(string Name, string LastName, int Id)
         {
             using var scope = _scopeFactory.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
 
             var selectedUser = _context.Customers
+                .Where(u => u.Name == Name && u.LastName == LastName && u.Id == Id)
                 .Include(u => u.Orders)
                 .ThenInclude(o => o.Products)
                 .ThenInclude(p => p.Dish)
                 .Include(u => u.Address)
-                .FirstOrDefault(u => u.Name == Name && u.LastName == LastName);
+                .FirstOrDefault();
             return selectedUser;
         }
 
