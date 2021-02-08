@@ -67,6 +67,7 @@ namespace CreateDb.Services
 
         //работает
         //продумать проверку string OrderStatus
+        //убрать return
         public OrderEntity ChangeOrderStatus(OrderEntity order, string orderStatus)
         {
             using var scope = _scopeFactory.CreateScope();
@@ -91,7 +92,7 @@ namespace CreateDb.Services
             else
             {
                 orders = _context.Orders
-                    .Include(o => o.CustomerOrder)
+                    .Include(o => o.Customer)
                     .Include(o => o.Products)
                     .ThenInclude(p => p.Dish)
                     .ToList();

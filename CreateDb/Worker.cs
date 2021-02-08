@@ -106,7 +106,7 @@ namespace CreateDb
             var ord = _ordersStaffService.AllOrders();
             foreach(var o in ord)
             {
-                Console.WriteLine($"{o.CreatTime} - {o.CustomerEntityId} - status {o.Status} - {o.CustomerOrder.Name} {o.CustomerOrder.LastName}");
+                Console.WriteLine($"{o.CreatTime} - {o.CustomerEntityId} - status {o.Status} - {o.Customer.Name} {o.Customer.LastName}");
             }
         }
         private void TestCreateOrder()// ошибка в SaveChanges

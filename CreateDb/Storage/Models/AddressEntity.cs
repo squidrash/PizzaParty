@@ -17,7 +17,7 @@ namespace CreateDb.Storage.Models
         public int Apartment { get; set; }
 
         public int? CustomerEntityId { get; set; }
-        public CustomerEntity CustomerAddress { get; set; }
+        public CustomerEntity Customer { get; set; }
 
         public AddressOrderEntity AddressOrder { get; set; }
     }

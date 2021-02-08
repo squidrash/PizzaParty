@@ -37,7 +37,8 @@ namespace CreateDb.Services
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
 
             var users = _context.Customers
-                .OrderBy(u => u)
+                .OrderBy(u => u.Name)
+                .ThenBy(u => u.LastName)
                 .ToList();
             return users;
         }
@@ -86,8 +87,14 @@ namespace CreateDb.Services
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
 
             var infoCustomer = _context.Customers
-                .Include(c => c.Address)
                 .FirstOrDefault(c => c.Id == customer.Id);
+
+            infoCustomer.Name = customer.Name;
+            infoCustomer.LastName = customer.LastName;
+            infoCustomer.Phone = customer.Phone;
+            infoCustomer.Discount = customer.Discount;
+
+            _context.SaveChanges();
         }
 
 

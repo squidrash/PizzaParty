@@ -37,7 +37,7 @@ namespace CreateDb.TestDB
             OrderEntity firstOrder = new OrderEntity
             {
                 CreatTime = DateTime.Now,
-                CustomerOrder = tom,
+                Customer = tom,
                 Status = Status.New
             };
             _context.Orders.Add(firstOrder);
@@ -48,7 +48,7 @@ namespace CreateDb.TestDB
             OrderEntity secondOrder = new OrderEntity
             {
                 CreatTime = DateTime.Now,
-                CustomerOrder = bob,
+                Customer = bob,
                 Status = Status.New
             };
             _context.Orders.Add(secondOrder);
@@ -97,7 +97,7 @@ namespace CreateDb.TestDB
             var user = _context.Customers.
                 Where(u => u.Name == "Robert").FirstOrDefault();
 
-            AddressEntity addAddress = new AddressEntity() { City = "Ставрополь", Street = "Ленина", NumberOfBuild = "1", CustomerAddress = user };
+            AddressEntity addAddress = new AddressEntity() { City = "Ставрополь", Street = "Ленина", NumberOfBuild = "1", Customer = user };
 
             _context.Addresses.Add(addAddress);
             _context.SaveChanges();
