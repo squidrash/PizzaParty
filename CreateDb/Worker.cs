@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CreateDb.Services;
+using CreateDb.Services.CustomerActions;
 using CreateDb.Storage;
 using CreateDb.Storage.Models;
 using CreateDb.TestDB;
@@ -19,33 +20,18 @@ namespace CreateDb
         private readonly ILogger<Worker> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        private readonly IMenuForStaffService _menuStaffService;
-        private readonly IMenuForClientsService _menuClientsService;
+        private readonly ICustomerActionsService _customerActions;
 
-        private readonly IOrdersForCustomerService _ordersCustomerService;
-        private readonly IOrdersForStaffService _ordersStaffService;
-
-        private readonly IUserForCustomerService _userForCustomerService;
-        private readonly IUserForStaffService _userForStaffService;
-
-        public Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory,
-            IMenuForStaffService menuStaffService, IMenuForClientsService menuClientsService,
-            IOrdersForCustomerService ordersCustomerService, IOrdersForStaffService ordersStaffService,
-            IUserForCustomerService userForCustomerService, IUserForStaffService userForStaffService)
+        public Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, ICustomerActionsService customerActions)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
-
-            _menuStaffService = menuStaffService;
-            _menuClientsService = menuClientsService;
-
-            _ordersCustomerService = ordersCustomerService;
-            _ordersStaffService = ordersStaffService;
-
-            _userForCustomerService = userForCustomerService;
-            _userForStaffService = userForStaffService;
+            _customerActions = customerActions;
 
             ApplyMigrations();
+
+            _customerActions.ReedFullMenu();
+            //TestAddress();
 
             //TestAllOrders();
 
@@ -79,77 +65,7 @@ namespace CreateDb
 
         }
 
-        private void InitialData()
-        {
-            AddDataToTable testDB = new AddDataToTable();
-            testDB.CreateMenu(_scopeFactory);
-            testDB.AddCustomerAndOrders(_scopeFactory);
-            testDB.AddToBascet(_scopeFactory);
-            testDB.AddAddress(_scopeFactory);
-        }
-        private void TestAllOrders()// работает
-        {
-            Console.WriteLine("метод с передачей клиента");
-
-            var user = _userForStaffService.SelectUser("Tom", "Smit");
-            Console.WriteLine($"{user.Name} {user.LastName}");
-            Console.WriteLine($"Номер: {user.Phone} скидка: {user.Discount}");
-            var orders = _ordersStaffService.AllOrders(user);
-
-            foreach (var order in orders)
-            {
-                Console.WriteLine($"{order.CreatTime} - {order.CustomerEntityId} - status {order.Status} ");
-            }
-
-            Console.WriteLine("метод без клиента");
-
-            var ord = _ordersStaffService.AllOrders();
-            foreach(var o in ord)
-            {
-                Console.WriteLine($"{o.CreatTime} - {o.CustomerEntityId} - status {o.Status} - {o.Customer.Name} {o.Customer.LastName}");
-            }
-        }
-        private void TestCreateOrder()// ошибка в SaveChanges
-        {
-            var user = _userForStaffService.SelectUser("Tom", "Smit");
-            Console.WriteLine($"{user.Name} {user.LastName}");
-            Console.WriteLine($"{user.Phone} {user.Discount}");
-
-            //var order = _ordersCustomerService.CreateOrder(user);
-            //Console.WriteLine("метод с передачей клиента");
-            //Console.WriteLine($"{order.CreatTime} - {order.CustomerEntityId} - status {order.Status}");
-            //var order1 = _ordersCustomerService.CreateOrder();
-            //Console.WriteLine("метод без передачи клиента");
-            //Console.WriteLine($"{order1.CreatTime} - {order1.CustomerEntityId} - status {order1.Status}");
-            _ordersCustomerService.CreateOrder(user);
-            
-             _ordersCustomerService.CreateOrder();
-            
-        }
-        private void TestChangeOrderStatus()// работает
-        {
-            var user = _userForStaffService.SelectUser("Tom", "Smit");
-            Console.WriteLine($"{user.Name} {user.LastName}");
-            Console.WriteLine($"Номер: {user.Phone} скидка: {user.Discount}");
-            var orders = user.Orders;
-            foreach (var o in orders)
-            {
-                Console.WriteLine($"Время создания заказа: {o.CreatTime.TimeOfDay}б  статус заказа: {o.Status}");
-                var products = o.Products;
-                foreach (var p in products)
-                {
-                    Console.WriteLine($"Наименование блюда: {p.Dish.ProductName}, количество - {p.CountDish}");
-                }
-            }
-
-            var order = user.Orders
-                .Where(o => o.Status == Status.Preparing)
-                .FirstOrDefault();
-            var orderStatus = "Новый";
-            Console.WriteLine($"статус до изменения {order.Status}");
-            var result = _ordersStaffService.ChangeOrderStatus(order, orderStatus);
-            Console.WriteLine($"статус после изменения {result.Status}");
-        }
+        
 
         private void ApplyMigrations()
         {

@@ -8,30 +8,40 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CreateDb.Services
 {
-    public interface IAddressServiceForStaff
+    //public interface IAddressForStaffService
+    //{
+    //    public void CreateDeliveryAddress(string city, string street, string numberOfBuild,
+    //        int numberOfEntrance = 0, int apartment = 0);
+
+    //    public AddressEntity GetDeliveryAddress(string city, string street, string numberOfBuild,
+    //        int numberOfEntrance = 0, int apartment = 0);
+
+    //    public void EditDeliveryAddress(AddressEntity address);
+
+    //    public void RemoveDeliveryAddress(AddressEntity address);
+    //}
+    //public interface IAddressForCustomerService
+    //{
+    //    public void CreateDeliveryAddress(string city, string street, string numberOfBuild,
+    //        int numberOfEntrance = 0, int apartment = 0);
+
+    //    public AddressEntity GetDeliveryAddress(string city, string street, string numberOfBuild,
+    //        int numberOfEntrance = 0, int apartment = 0);
+
+    //    public void EditDeliveryAddress(AddressEntity address);
+    //}
+    public interface IAddressesService
     {
         public void CreateDeliveryAddress(string city, string street, string numberOfBuild,
             int numberOfEntrance = 0, int apartment = 0);
-
+        public void EditDeliveryAddress(AddressEntity address);
         public AddressEntity GetDeliveryAddress(string city, string street, string numberOfBuild,
             int numberOfEntrance = 0, int apartment = 0);
-
-        public void EditDeliveryAddress(AddressEntity address);
-
         public void RemoveDeliveryAddress(AddressEntity address);
-    }
-    public interface IAddressServiceForCustomer
-    {
-        public void CreateDeliveryAddress(string city, string street, string numberOfBuild,
-            int numberOfEntrance = 0, int apartment = 0);
 
-        public AddressEntity GetDeliveryAddress(string city, string street, string numberOfBuild,
-            int numberOfEntrance = 0, int apartment = 0);
-
-        public void EditDeliveryAddress(AddressEntity address);
     }
 
-    public class AddressesService : IAddressServiceForCustomer ,IAddressServiceForStaff
+    public class AddressesService : IAddressesService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         public AddressesService(IServiceScopeFactory scopeFactory)
@@ -75,23 +85,23 @@ namespace CreateDb.Services
             _context.SaveChanges();
         }
         public AddressEntity GetDeliveryAddress(string city, string street, string numberOfBuild,
-            int numberOfEntrance = 0, int apartment = 0)
+            int numberOfEntrance, int apartment)
         {
             using var scope = _scopeFactory.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
 
-            var address = _context.Addresses
-                .Where(a => a.City == city
-                && a.Street == street
-                && a.NumberOfBuild == numberOfBuild
-                && a.NumberOfEntrance == numberOfEntrance
-                && a.Apartment == apartment)
-                .Include(a => a.Customer)
-                //нужно ли это все загружать?
-                //и если нужно то что??
-                .Include(a => a.AddressOrder.Order)
-                .ThenInclude(o => o.Products)
-                .FirstOrDefault();
+            //var address = _context.Addresses
+            //    .Where(a => a.City == city
+            //    && a.Street == street
+            //    && a.NumberOfBuild == numberOfBuild
+            //    && a.NumberOfEntrance == numberOfEntrance
+            //    && a.Apartment == apartment)
+            //    .Include(a => a.Customer)
+            //    //нужно ли это все загружать?
+            //    //и если нужно то что??
+            //    .Include(a => a.AddressOrder.Order)
+            //    .ThenInclude(o => o.Products)
+            //    .FirstOrDefault();
 
             //var address = _context.Addresses
             //    .Where(a => a.City == city)
@@ -101,7 +111,23 @@ namespace CreateDb.Services
             //    .Where(a => a.Apartment == apartment)
             //    .FirstOrDefault();
 
-            return address;
+            var address = _context.Addresses
+                .Where(a => a.City == city)
+                .Where(a => a.Street == street)
+                .Where(a => a.NumberOfBuild == numberOfBuild);
+            if(numberOfEntrance != 0)
+            {
+                address = address
+                    .Where(a => a.NumberOfEntrance == numberOfEntrance);
+            }
+            if(apartment != 0)
+            {
+                address = address
+                    .Where(a => a.Apartment == apartment);
+            }
+            var selectAddress = address.FirstOrDefault();
+                
+            return selectAddress;
         }
         public void RemoveDeliveryAddress(AddressEntity address)
         {

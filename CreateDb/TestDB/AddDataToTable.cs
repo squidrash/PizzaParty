@@ -97,7 +97,7 @@ namespace CreateDb.TestDB
             var user = _context.Customers.
                 Where(u => u.Name == "Robert").FirstOrDefault();
 
-            AddressEntity addAddress = new AddressEntity() { City = "Ставрополь", Street = "Ленина", NumberOfBuild = "1", Customer = user };
+            AddressEntity addAddress = new AddressEntity() { City = "Ставрополь", Street = "Ленина", NumberOfBuild = "1" };
 
             _context.Addresses.Add(addAddress);
             _context.SaveChanges();

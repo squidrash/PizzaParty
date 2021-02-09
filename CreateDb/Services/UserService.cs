@@ -8,22 +8,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CreateDb.Services
 {
-    public interface IUserForStaffService
+    //public interface IUserForStaffService
+    //{
+    //    public List<CustomerEntity> AllUsers();
+    //    public CustomerEntity SelectUser(string Name, string LastName, int Id);
+    //    public void RegistrationUser(List<CustomerEntity> customers);
+    //    public void DeleteUser(List<CustomerEntity> customers);
+    //    public void EditUser(CustomerEntity customer);
+    //}
+
+    //public interface IUserForCustomerService
+    //{
+    //    public CustomerEntity SelectUser(string Name, string LastName, int Id);
+    //    public void EditUser(CustomerEntity customer);
+    //}
+
+    public interface IUserService
     {
         public List<CustomerEntity> AllUsers();
-        public CustomerEntity SelectUser(string Name, string LastName);
+        public CustomerEntity SelectUser(string Name, string LastName, int Id);
         public void RegistrationUser(List<CustomerEntity> customers);
         public void DeleteUser(List<CustomerEntity> customers);
         public void EditUser(CustomerEntity customer);
+
     }
 
-    public interface IUserForCustomerService
-    {
-        public CustomerEntity SelectUser(string Name, string LastName);
-        public void EditUser(CustomerEntity customer);
-    }
-
-    public class UserService : IUserForStaffService, IUserForCustomerService
+    public class UserService : IUserService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         public UserService(IServiceScopeFactory scopeFactory)
@@ -53,7 +63,8 @@ namespace CreateDb.Services
                 .Include(u => u.Orders)
                 .ThenInclude(o => o.Products)
                 .ThenInclude(p => p.Dish)
-                .Include(u => u.Address)
+                .Include(u => u.Addresses)
+                .ThenInclude(a => a.Address)
                 .FirstOrDefault();
             return selectedUser;
         }

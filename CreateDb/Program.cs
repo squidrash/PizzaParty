@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CreateDb.Services;
+using CreateDb.Services.CustomerActions;
 using CreateDb.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,14 +28,30 @@ namespace CreateDb
                     services.AddDbContext<PizzaDbContext>(options => options.UseNpgsql(pgConnection));
                     services.AddHostedService<Worker>();
 
-                    services.AddSingleton<IMenuForStaffService, MenuService>();
-                    services.AddSingleton<IMenuForClientsService, MenuService>();
+                    //services.AddSingleton<IMenuForStaffService, MenuService>();
+                    //services.AddSingleton<IMenuForClientsService, MenuService>();
+                    services.AddSingleton<IMenuService, MenuService>();
 
-                    services.AddSingleton<IUserForCustomerService, UserService>();
-                    services.AddSingleton<IUserForStaffService, UserService>();
+                    //services.AddSingleton<IUserForCustomerService, UserService>();
+                    //services.AddSingleton<IUserForStaffService, UserService>();
+                    services.AddSingleton<IUserService, UserService>();
 
-                    services.AddSingleton<IOrdersForCustomerService, OrdersService>();
-                    services.AddSingleton<IOrdersForStaffService, OrdersService>();
+                    //services.AddSingleton<IOrdersForCustomerService, OrdersService>();
+                    //services.AddSingleton<IOrdersForStaffService, OrdersService>();
+                    services.AddSingleton<IOrdersService, OrdersService>();
+
+                    //services.AddSingleton<IAddressForCustomerService, AddressesService>();
+                    //services.AddSingleton<IAddressForStaffService, AddressesService>();
+                    services.AddSingleton<IAddressesService, AddressesService>();
+
+                    services.AddSingleton<IOrderMenuService, OrderMenuService>();
+
+                    services.AddSingleton<IAddressOrderService, AddressOrderService>();
+
+                    services.AddSingleton<ICustomerAddressService, CustomerAddressService>();
+
+                    services.AddSingleton<ICustomerActionsService, CustomerActionsService>();
+
                 });
     }
 }

@@ -21,5 +21,7 @@
     <Folder Include="TestDB\" />
     <Folder Include="Migrations\" />
     <Folder Include="Services\" />
+    <Folder Include="Services\CustomerActions\" />
+    <Folder Include="Services\StaffActions\" />
   </ItemGroup>
 </Project>

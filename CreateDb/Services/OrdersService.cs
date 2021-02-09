@@ -8,25 +8,32 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CreateDb.Services
 {
-    public interface IOrdersForStaffService
-    {
-        public OrderEntity ChangeOrderStatus(OrderEntity order, string orderStatus);
+    //public interface IOrdersForStaffService
+    //{
+    //    public OrderEntity ChangeOrderStatus(OrderEntity order, string orderStatus);
 
-        public List<OrderEntity> AllOrders(CustomerEntity customer = null);
+    //    public List<OrderEntity> AllOrders(CustomerEntity customer = null);
 
-        //public OrderEntity OneOrderOfOneCustomer(CustomerEntity customer, string orderStatus = null);
+    //    //public OrderEntity OneOrderOfOneCustomer(CustomerEntity customer, string orderStatus = null);
 
-    }
+    //}
 
-    public interface IOrdersForCustomerService
+    //public interface IOrdersForCustomerService
+    //{
+    //    public void CreateOrder(CustomerEntity customer = null);
+    //    public List<OrderEntity> AllOrders(CustomerEntity customer);
+
+    //    //public OrderEntity OneOrderOfOneCustomer(CustomerEntity customer, string orderStatus = null);
+    //}
+
+    public interface IOrdersService
     {
         public void CreateOrder(CustomerEntity customer = null);
-        public List<OrderEntity> AllOrders(CustomerEntity customer);
-
-        //public OrderEntity OneOrderOfOneCustomer(CustomerEntity customer, string orderStatus = null);
+        public OrderEntity ChangeOrderStatus(OrderEntity order, string orderStatus);
+        public List<OrderEntity> AllOrders(CustomerEntity customer = null);
     }
         
-    public class OrdersService : IOrdersForCustomerService, IOrdersForStaffService
+    public class OrdersService : IOrdersService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         public OrdersService(IServiceScopeFactory scopeFactory)

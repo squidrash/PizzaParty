@@ -7,27 +7,36 @@ using System.Collections.Generic;
 
 namespace CreateDb.Services
 {
-    public interface IMenuForStaffService
+    //public interface IMenuForStaffService
+    //{
+    //    public List<MenuEntity> GetMenu();
+
+    //    public MenuEntity OneDish(string dishName);
+
+    //    public void AddToMenu(List<MenuEntity> menuEntity);
+
+    //    public void EditMenu(MenuEntity menuEntity);
+
+    //    public void RemoveFromMenu(MenuEntity menuEntity);
+    //}
+
+    //public interface IMenuForClientsService
+    //{
+    //    public List<MenuEntity> GetMenu();
+
+    //    public MenuEntity OneDish(string dishName);
+    //}
+    public interface IMenuService
     {
         public List<MenuEntity> GetMenu();
-
         public MenuEntity OneDish(string dishName);
-
         public void AddToMenu(List<MenuEntity> menuEntity);
-
         public void EditMenu(MenuEntity menuEntity);
-
         public void RemoveFromMenu(MenuEntity menuEntity);
+
     }
 
-    public interface IMenuForClientsService
-    {
-        public List<MenuEntity> GetMenu();
-
-        public MenuEntity OneDish(string dishName);
-    }
-
-    public class MenuService : IMenuForStaffService, IMenuForClientsService
+    public class MenuService : IMenuService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         public MenuService(IServiceScopeFactory scopeFactory)

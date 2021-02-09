@@ -12,6 +12,7 @@ namespace CreateDb.Storage
         public DbSet<OrderMenuEntity> OrderMenuEntities { get; set; }
         public DbSet<AddressEntity> Addresses { get; set; }
         public DbSet<AddressOrderEntity> AddressOrderEntities { get; set; }
+        public DbSet<CustomerAddressEntity> CustomerAddressEntities { get; set; }
 
         public PizzaDbContext(DbContextOptions<PizzaDbContext> options)
             : base (options)

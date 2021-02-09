@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace CreateDb.Storage.Models
@@ -13,11 +14,10 @@ namespace CreateDb.Storage.Models
         public string Street { get; set; }
         [Required]
         public string NumberOfBuild { get; set; }
-        public int NumberOfEntrance { get; set; }
-        public int Apartment { get; set; }
+        public int? NumberOfEntrance { get; set; }
+        public int? Apartment { get; set; }
 
-        public int? CustomerEntityId { get; set; }
-        public CustomerEntity Customer { get; set; }
+        public List<CustomerAddressEntity> Customers { get; set; }
 
         public AddressOrderEntity AddressOrder { get; set; }
     }

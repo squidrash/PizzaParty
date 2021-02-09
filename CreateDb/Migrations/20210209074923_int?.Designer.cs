@@ -3,15 +3,17 @@ using System;
 using CreateDb.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CreateDb.Migrations
 {
     [DbContext(typeof(PizzaDbContext))]
-    partial class PizzaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210209074923_int?")]
+    partial class @int
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,6 +35,9 @@ namespace CreateDb.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("CustomerEntityId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("NumberOfBuild")
                         .IsRequired()
                         .HasColumnType("text");
@@ -45,6 +50,8 @@ namespace CreateDb.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerEntityId");
 
                     b.ToTable("Addresses");
                 });
@@ -71,28 +78,6 @@ namespace CreateDb.Migrations
                         .IsUnique();
 
                     b.ToTable("AddressOrderEntities");
-                });
-
-            modelBuilder.Entity("CreateDb.Storage.Models.CustomerAddressEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("AddressEntityId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CustomerEntityId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressEntityId");
-
-                    b.HasIndex("CustomerEntityId");
-
-                    b.ToTable("CustomerAddressEntities");
                 });
 
             modelBuilder.Entity("CreateDb.Storage.Models.CustomerEntity", b =>
@@ -188,6 +173,13 @@ namespace CreateDb.Migrations
                     b.ToTable("OrderMenuEntities");
                 });
 
+            modelBuilder.Entity("CreateDb.Storage.Models.AddressEntity", b =>
+                {
+                    b.HasOne("CreateDb.Storage.Models.CustomerEntity", "Customer")
+                        .WithMany("Address")
+                        .HasForeignKey("CustomerEntityId");
+                });
+
             modelBuilder.Entity("CreateDb.Storage.Models.AddressOrderEntity", b =>
                 {
                     b.HasOne("CreateDb.Storage.Models.AddressEntity", "Address")
@@ -199,21 +191,6 @@ namespace CreateDb.Migrations
                     b.HasOne("CreateDb.Storage.Models.OrderEntity", "Order")
                         .WithOne("AddressOrder")
                         .HasForeignKey("CreateDb.Storage.Models.AddressOrderEntity", "OrderEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CreateDb.Storage.Models.CustomerAddressEntity", b =>
-                {
-                    b.HasOne("CreateDb.Storage.Models.AddressEntity", "Address")
-                        .WithMany("Customers")
-                        .HasForeignKey("AddressEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CreateDb.Storage.Models.CustomerEntity", "Customer")
-                        .WithMany("Addresses")
-                        .HasForeignKey("CustomerEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

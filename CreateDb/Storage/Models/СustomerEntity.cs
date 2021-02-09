@@ -12,7 +12,7 @@ namespace CreateDb.Storage.Models
         [Required]
         public string LastName { get; set; }
         
-        public List<AddressEntity> Address { get; set; }
+        public List<CustomerAddressEntity> Addresses { get; set; }
         [Required]
         public string Phone { get; set; }
         public int Discount { get; set; }
