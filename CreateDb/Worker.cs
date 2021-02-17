@@ -21,17 +21,20 @@ namespace CreateDb
         private readonly IServiceScopeFactory _scopeFactory;
 
         private readonly ICustomerActionsService _customerActions;
+        private readonly ITestService _testService;
 
-        public Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, ICustomerActionsService customerActions)
+        public Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, ICustomerActionsService customerActions, ITestService testService)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
             _customerActions = customerActions;
+            _testService = testService;
 
             ApplyMigrations();
 
-            _customerActions.ReedFullMenu();
-            //TestAddress();
+            _customerActions.GetFullMenu();
+            Console.WriteLine("Попытка что то сделать");
+            _testService.TestAddress();
 
             //TestAllOrders();
 

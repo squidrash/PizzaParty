@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CreateDb.Services;
 using CreateDb.Services.CustomerActions;
 using CreateDb.Storage;
+using CreateDb.TestDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +52,8 @@ namespace CreateDb
                     services.AddSingleton<ICustomerAddressService, CustomerAddressService>();
 
                     services.AddSingleton<ICustomerActionsService, CustomerActionsService>();
+
+                    services.AddSingleton<ITestService, TestService>();
 
                 });
     }

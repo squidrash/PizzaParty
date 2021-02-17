@@ -26,7 +26,10 @@ namespace CreateDb.Services
     public interface IUserService
     {
         public List<CustomerEntity> AllUsers();
-        public CustomerEntity SelectUser(string Name, string LastName, int Id);
+
+        public CustomerEntity SelectUserFromDb(string Name, string LastName, int Id);
+        public CustomerEntity SelectUser(string Name, string LastName, string Phone);
+
         public void RegistrationUser(List<CustomerEntity> customers);
         public void DeleteUser(List<CustomerEntity> customers);
         public void EditUser(CustomerEntity customer);
@@ -53,7 +56,7 @@ namespace CreateDb.Services
             return users;
         }
 
-        public CustomerEntity SelectUser(string Name, string LastName, int Id)
+        public CustomerEntity SelectUserFromDb(string Name, string LastName, int Id)
         {
             using var scope = _scopeFactory.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
@@ -65,6 +68,16 @@ namespace CreateDb.Services
                 .ThenInclude(p => p.Dish)
                 .Include(u => u.Addresses)
                 .ThenInclude(a => a.Address)
+                .FirstOrDefault();
+            return selectedUser;
+        }
+        public CustomerEntity SelectUser(string Name, string LastName, string Phone)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
+
+            var selectedUser = _context.Customers
+                .Where(u => u.Name == Name && u.LastName == LastName && u.Phone == Phone)
                 .FirstOrDefault();
             return selectedUser;
         }

@@ -20,13 +20,19 @@ namespace CreateDb.Services
         }
         public void CustomerAddress(CustomerEntity customer, AddressEntity address)
         {
-            var customerAddress = new CustomerAddressEntity { AddressEntityId = address.Id, CustomerEntityId = customer.Id };
-
             using var scope = _scopeFactory.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
 
-            _context.CustomerAddressEntities.Add(customerAddress);
-            _context.SaveChanges();
+            var checkCuctomerAddress = _context.CustomerAddressEntities
+                .Where(c => c.CustomerEntityId == customer.Id && c.AddressEntityId == address.Id)
+                .FirstOrDefault();
+
+            if(checkCuctomerAddress == null)
+            {
+                var customerAddress = new CustomerAddressEntity { CustomerEntityId = customer.Id, AddressEntityId = address.Id, };
+                _context.CustomerAddressEntities.Add(customerAddress);
+                _context.SaveChanges();
+            }
         }
     }
 }

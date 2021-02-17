@@ -34,9 +34,9 @@ namespace CreateDb.Services
     {
         public void CreateDeliveryAddress(string city, string street, string numberOfBuild,
             int numberOfEntrance = 0, int apartment = 0);
+        public void CreateDeliveryAddress(AddressEntity address);
         public void EditDeliveryAddress(AddressEntity address);
-        public AddressEntity GetDeliveryAddress(string city, string street, string numberOfBuild,
-            int numberOfEntrance = 0, int apartment = 0);
+        public AddressEntity GetDeliveryAddress(AddressEntity address);
         public void RemoveDeliveryAddress(AddressEntity address);
 
     }
@@ -67,6 +67,16 @@ namespace CreateDb.Services
             var createAddress = _context.Addresses.Add(address);
             _context.SaveChanges();
         }
+        public void CreateDeliveryAddress(AddressEntity address)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
+
+            var createAddress = _context.Addresses.Add(address);
+            _context.SaveChanges();
+        }
+
+
         public void EditDeliveryAddress(AddressEntity address)
         {
             using var scope = _scopeFactory.CreateScope();
@@ -84,46 +94,24 @@ namespace CreateDb.Services
 
             _context.SaveChanges();
         }
-        public AddressEntity GetDeliveryAddress(string city, string street, string numberOfBuild,
-            int numberOfEntrance, int apartment)
+        public AddressEntity GetDeliveryAddress(AddressEntity deliveryAddress)
         {
             using var scope = _scopeFactory.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
 
-            //var address = _context.Addresses
-            //    .Where(a => a.City == city
-            //    && a.Street == street
-            //    && a.NumberOfBuild == numberOfBuild
-            //    && a.NumberOfEntrance == numberOfEntrance
-            //    && a.Apartment == apartment)
-            //    .Include(a => a.Customer)
-            //    //нужно ли это все загружать?
-            //    //и если нужно то что??
-            //    .Include(a => a.AddressOrder.Order)
-            //    .ThenInclude(o => o.Products)
-            //    .FirstOrDefault();
-
-            //var address = _context.Addresses
-            //    .Where(a => a.City == city)
-            //    .Where(a => a.Street == street)
-            //    .Where(a => a.NumberOfBuild == numberOfBuild)
-            //    .Where(a => a.NumberOfEntrance == numberOfEntrance)
-            //    .Where(a => a.Apartment == apartment)
-            //    .FirstOrDefault();
-
             var address = _context.Addresses
-                .Where(a => a.City == city)
-                .Where(a => a.Street == street)
-                .Where(a => a.NumberOfBuild == numberOfBuild);
-            if(numberOfEntrance != 0)
+                .Where(a => a.City == deliveryAddress.City)
+                .Where(a => a.Street == deliveryAddress.Street)
+                .Where(a => a.NumberOfBuild == deliveryAddress.NumberOfBuild);
+            if(deliveryAddress.NumberOfEntrance != null)
             {
                 address = address
-                    .Where(a => a.NumberOfEntrance == numberOfEntrance);
+                    .Where(a => a.NumberOfEntrance == deliveryAddress.NumberOfEntrance);
             }
-            if(apartment != 0)
+            if(deliveryAddress.Apartment != null)
             {
                 address = address
-                    .Where(a => a.Apartment == apartment);
+                    .Where(a => a.Apartment == deliveryAddress.Apartment);
             }
             var selectAddress = address.FirstOrDefault();
                 

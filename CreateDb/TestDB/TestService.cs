@@ -7,7 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CreateDb.TestDB
 {
-    public class TestService
+    public interface ITestService
+    {
+        public void TestAddress();
+    }
+    public class TestService :ITestService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         
@@ -40,7 +44,7 @@ namespace CreateDb.TestDB
         {
             Console.WriteLine("метод с передачей клиента");
 
-            var user = _userService.SelectUser("Tom", "Smit", 1);
+            var user = _userService.SelectUserFromDb("Tom", "Smit", 1);
             Console.WriteLine($"{user.Name} {user.LastName}");
             Console.WriteLine($"Номер: {user.Phone} скидка: {user.Discount}");
             var orders = _ordersService.AllOrders(user);
@@ -60,7 +64,7 @@ namespace CreateDb.TestDB
         }
         private void TestCreateOrder()// ошибка в SaveChanges
         {
-            var user = _userService.SelectUser("Tom", "Smit", 1);
+            var user = _userService.SelectUserFromDb("Tom", "Smit", 1);
             Console.WriteLine($"{user.Name} {user.LastName}");
             Console.WriteLine($"{user.Phone} {user.Discount}");
 
@@ -77,7 +81,7 @@ namespace CreateDb.TestDB
         }
         private void TestChangeOrderStatus()// работает
         {
-            var user = _userService.SelectUser("Tom", "Smit", 1);
+            var user = _userService.SelectUserFromDb("Tom", "Smit", 1);
             Console.WriteLine($"{user.Name} {user.LastName}");
             Console.WriteLine($"Номер: {user.Phone} скидка: {user.Discount}");
             var orders = user.Orders;
@@ -100,35 +104,88 @@ namespace CreateDb.TestDB
             Console.WriteLine($"статус после изменения {result.Status}");
         }
 
-        private void TestAddress()
+        public void TestAddress()
         {
             Console.WriteLine("Метод без квартиры и подъезда");
 
             var city = "Буденновск";
             var street = "Пушкинская";
             var numbOfBuild = "77777";
+            AddressEntity address1 = new AddressEntity
+            {
+                City = city,
+                Street = street,
+                NumberOfBuild = numbOfBuild
+            };
+            
             //_addressesService.CreateDeliveryAddress(city, street, numbOfBuild);
 
             Console.WriteLine("полный метод");
             var city2 = "Ставрополь";
             var street2 = "Ленина";
-            var nubmOfBuild2 = "10000";
+            var numbOfBuild2 = "10000";
             var numbOfEntrance2 = 1;
             var apartment = 27;
-            //_addressesService.CreateDeliveryAddress(city2, street2, nubmOfBuild2, numbOfEntrance2, apartment);
+            AddressEntity address2 = new AddressEntity
+            {
+                City = city2,
+                Street = street2,
+                NumberOfBuild = numbOfBuild2,
+                NumberOfEntrance = numbOfEntrance2,
+                Apartment = apartment
 
-            var address1 = _addressesService.GetDeliveryAddress(city, street, numbOfBuild);
-            var address2 = _addressesService.GetDeliveryAddress(city2, street2, nubmOfBuild2, numbOfEntrance2, apartment);
+            };
+
+            var address3 = new AddressEntity
+            {
+                City = " абра ",
+                Street = "кадабра",
+                NumberOfBuild = "123456"
+            };
+            //_addressesService.CreateDeliveryAddress(city2, street2, nubmOfBuild2, numbOfEntrance2, apartment);
+            
+
+            var addres = _addressesService.GetDeliveryAddress(address1);
+            var addres2 = _addressesService.GetDeliveryAddress(address2);
+            var addres3 = _addressesService.GetDeliveryAddress(address3);
             List<AddressEntity> addresses = new List<AddressEntity>();
 
-            addresses.Add(address1);
-            addresses.Add(address2);
+            addresses.Add(addres);
+            addresses.Add(addres2);
+            addresses.Add(addres3);
 
+            //if (addres != null)
+            //{
+            //    addresses.Add(addres);
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Объект не найден 1");
+            //}
+            //if (addres2 != null)
+            //{
+            //    addresses.Add(addres2);
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Объект не найден 2");
+            //}
+
+
+            var i = 1;
             foreach (var a in addresses)
             {
-                Console.WriteLine($"{a.Id} - {a.City}  {a.Street} {a.NumberOfBuild} {a.NumberOfEntrance} {a.Apartment}");
+                if (a != null)
+                {
+                    Console.WriteLine($"{a.Id} - {a.City}  {a.Street} {a.NumberOfBuild} {a.NumberOfEntrance} {a.Apartment}");
 
-                Console.WriteLine("--------------------------");
+                    Console.WriteLine("--------------------------");
+                }
+                else
+                {
+                    Console.WriteLine($"Объект {i} не найден");
+                }
+                 ++i;
             }
 
         }
