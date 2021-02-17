@@ -20,9 +20,9 @@ namespace CreateDb.Services
             _scopeFactory = scopeFactory;
         }
 
-        public void OrderMenu(OrderEntity order, MenuEntity dish, int count)
+        public void OrderMenu(OrderEntity order, MenuEntity dish, int quantity = 1)
         {
-            var orderMenu = new OrderMenuEntity { OrderEntityId = order.Id, MenuEntityId = dish.Id, CountDish = count };
+            var orderMenu = new OrderMenuEntity { OrderEntityId = order.Id, MenuEntityId = dish.Id, CountDish = quantity };
 
             using var scope = _scopeFactory.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();

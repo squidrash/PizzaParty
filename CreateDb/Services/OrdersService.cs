@@ -28,7 +28,7 @@ namespace CreateDb.Services
 
     public interface IOrdersService
     {
-        public void CreateOrder(CustomerEntity customer = null);
+        public OrderEntity CreateOrder(CustomerEntity customer = null);
         public OrderEntity ChangeOrderStatus(OrderEntity order, string orderStatus);
         public List<OrderEntity> AllOrders(CustomerEntity customer = null);
     }
@@ -51,12 +51,20 @@ namespace CreateDb.Services
         };
 
         //работает
-        public void CreateOrder(CustomerEntity customer = null) 
+        public OrderEntity CreateOrder(CustomerEntity customer = null) 
         {
             using var scope = _scopeFactory.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<PizzaDbContext>();
 
             OrderEntity order = new OrderEntity();
+
+            //можно сократить до
+            //order.CreatTime = DateTime.Now;
+            //order.Status = Status.New;
+            //if (customer != null)
+            //{ 
+            //    order.CustomerEntityId = customer.Id;
+            //}
             if (customer != null)
             {
                 order.CreatTime = DateTime.Now;
@@ -70,6 +78,7 @@ namespace CreateDb.Services
             }
             _context.Orders.Add(order);
             _context.SaveChanges();
+            return order;
         }
 
         //работает

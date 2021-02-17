@@ -16,13 +16,18 @@ namespace CreateDb.Services.CustomerActions
         private readonly IAddressesService _addressesService;
         private readonly IUserService _userService;
         private readonly ICustomerAddressService _customerAddressService;
+        private readonly IOrdersService _ordersService;
+        private readonly IOrderMenuService _orderMenuService;
+        private readonly IAddressOrderService _addressOrderService;
 
         //вместо _customer должен быть залогиненный пользователь
         private CustomerEntity _customer;
 
         public CustomerActionsService(IServiceScopeFactory scopeFactory, IMenuService menuService,
              IAddressesService addressesService, IUserService userService,
-             ICustomerAddressService customerAddressService, CustomerEntity customer = null)
+             ICustomerAddressService customerAddressService,
+             IOrdersService ordersService, IAddressOrderService addressOrderService,
+             IOrderMenuService orderMenuService, CustomerEntity customer = null)
         {
             _scopeFactory = scopeFactory;
             _menuService = menuService;
@@ -30,6 +35,9 @@ namespace CreateDb.Services.CustomerActions
             _addressesService = addressesService;
             _userService = userService;
             _customerAddressService = customerAddressService;
+            _ordersService = ordersService;
+            _orderMenuService = orderMenuService;
+            _addressOrderService = addressOrderService;
         }
 
         public List<MenuEntity> GetFullMenu()
@@ -68,9 +76,18 @@ namespace CreateDb.Services.CustomerActions
             return address;
         }
         
-        public void CreateOrder(List<MenuEntity> dishes, List<int> count, CustomerEntity customer = null, AddressEntity address = null )
+        public void CreateOrder(List<MenuEntity> dishes, List<int> quantity, CustomerEntity customer = null, AddressEntity address = null )
         {
+            var order = _ordersService.CreateOrder(customer);
+            for(int i = 0; i < dishes.Count; i++)
+            {
+                _orderMenuService.OrderMenu(order, dishes[i], quantity[i]);
+            }
 
+            if(address != null)
+            {
+                _addressOrderService.AddressOrder(address, order);
+            }
         }
 
 
